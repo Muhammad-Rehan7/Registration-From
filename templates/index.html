@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Registration Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sign add">+</div>
+    <div class="sign minus">-</div>
+    <img id="society-logo" src="{{ url_for('static', filename='society-logo.jpeg') }}" alt="Society Logo">
+    <img id="gcu-logo" src="{{ url_for('static', filename='GcU-logo.jpg') }}" alt="GCU Logo">
+    <div id="side-heading-1">Mathematical <br> Model <br> Competition</div>
+    <div id="side-heading-2">By <br> Chawla <br> mathematical <br> society </div>
+    <h2>Team Registration</h2>
+    <form id="teamForm" class="glass-card" enctype="multipart/form-data" method="POST">
+        <label>Team Name</label>
+        <!-- <input type="text" name="team_name" required> -->
+    <div class="nebula-input">
+    <input required="" type="text" name="team_name" autocomplete="off" class="input" required/>
+    <label class="user-label">Team Name</label>
+    <div class="nebula-particle" style="--x:0.2; --y:-0.4; --delay:0.1s"></div>
+    <div class="nebula-particle" style="--x:0.5; --y:-0.2; --delay:0.3s"></div>
+    <div class="nebula-particle" style="--x:0.3; --y:0.3; --delay:0.5s"></div>
+    <div class="nebula-particle" style="--x:0.7; --y:0.1; --delay:0.2s"></div>
+    <div class="nebula-particle" style="--x:0.1; --y:-0.7; --delay:0.4s"></div>
+    <div class="nebula-particle" style="--x:0.6; --y:0.4; --delay:0.6s"></div>
+    </div>
+
+        <label>Team Topic</label>
+        <!-- <input type="text" name="team_topic" required><br> -->
+    <div class="nebula-input">
+    <input required="" type="text" name="team_topic" autocomplete="off" class="input" required/>
+    <label class="user-label">Team Topic</label>
+    <div class="nebula-particle" style="--x:0.2; --y:-0.4; --delay:0.1s"></div>
+    <div class="nebula-particle" style="--x:0.5; --y:-0.2; --delay:0.3s"></div>
+    <div class="nebula-particle" style="--x:0.3; --y:0.3; --delay:0.5s"></div>
+    <div class="nebula-particle" style="--x:0.7; --y:0.1; --delay:0.2s"></div>
+    <div class="nebula-particle" style="--x:0.1; --y:-0.7; --delay:0.4s"></div>
+    <div class="nebula-particle" style="--x:0.6; --y:0.4; --delay:0.6s"></div>
+    </div>
+
+        <label>Number of Members</label>
+        <!-- <div class="radio-group">
+            <label><input type="radio" name="member_count" value="3" required checked> 3</label>
+            <label><input type="radio" name="member_count" value="4"> 4</label>
+            <label><input type="radio" name="member_count" value="5"> 5</label>
+        </div> -->
+        <div class="radio-input">
+            <label><input name="member_count" type="radio" class="input" value="3" required checked>3</label>
+            <label><input name="member_count" type="radio" class="input" value="4">4</label>
+            <label><input name="member_count" type="radio" class="input" value="5">5</label>
+        </div>
+
+        <div id="membersContainer"></div>
+
+        <label class="screenshot-label">Pay Registration Fee! 500.Rs and Upload Screenshot (PNG/JPG)</label>
+        <input class="screenshot-input" type="file" name="screenshot" accept="image/png, image/jpeg"><br>
+
+        <button class="submit" type="submit">Submit</button>
+    </form>
+
+    <script>
+        const membersContainer = document.getElementById("membersContainer");
+        const form = document.getElementById("teamForm");
+
+        // When radio changes, generate member cards
+        document.querySelectorAll('input[name="member_count"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const count = parseInt(e.target.value);
+                generateMemberCards(count);
+            });
+        });
+
+        function generateMemberCards(count) {
+            membersContainer.innerHTML = ""; // Clear old cards
+
+            var width 
+
+            if(count == 3) {
+                 width = "28%"
+            } else if (count == 4) {
+                 width = "21%"
+            } else {
+                 width = "16%"
+            }
+
+            for (let i = 1; i <= count; i++) {
+                const card = document.createElement("div");
+                card.classList.add("member-card");
+                card.style.width = width
+                card.innerHTML = `
+                    <h3>Member ${i}</h3>
+                    <label>Name:</label>
+                    <input type="text" placeholder="name" name="member${i}_name" required><br>
+
+                    <label>Roll Number:</label>
+                    <input type="text" placeholder="1111-BS-chem-25" name="member${i}_roll" required><br>
+
+                    <label>Department:</label>
+                    <input type="text" placeholder="Mathematics/ICS/FSC" name="member${i}_dept" required><br>
+
+                    <label>Semester:</label>
+                    <input type="text" placeholder="2,6 / 1st year" name="member${i}_semester" required><br>
+
+                    <label>Contact Number:</label>
+                    <input type="text" placeholder="03*********" name="member${i}_contact" required><br>
+                `;
+                membersContainer.appendChild(card);
+            }
+        }
+
+        // Handle submit
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await fetch("https://unnegated-tawnya-unapologetically.ngrok-free.dev/send", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+
+        generateMemberCards(3);
+    </script>
+</body>
+</html>
