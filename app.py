@@ -24,7 +24,7 @@ def index():
 def send_message():
     try:
         # collect form data
-        
+
         team_name = request.form.get("team_name")
         team_topic = request.form.get("team_topic")
         member_count = int(request.form.get("member_count"))
@@ -57,15 +57,18 @@ def send_message():
         if image:
             # Extract the file extension
             ext = os.path.splitext(image.filename)[1]  # e.g., ".png" or ".jpg"
-    
+
             # Make a safe filename from the team name
             safe_team_name = team_name.replace(" ", "_")  # replace spaces with underscores
             filename = f"{safe_team_name}{ext}"  # e.g., "AlphaTeam.png"
 
-            upload_path = os.path.join("static", "uploads", filename)
-            os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+            base_dir = os.path.dirname(__file__)
+            upload_folder = os.path.join(base_dir, "static", "uploads")
+            os.makedirs(upload_folder, exist_ok=True)
+
+            upload_path = os.path.join(upload_folder, filename)
             image.save(upload_path)
-            media_url = f"https://unnegated-tawnya-unapologetically.ngrok-free.dev/static/uploads/{filename}"  # use your LAN IP
+            media_url = f"https://chawlamathematicalsociety.pythonanywhere.com/static/uploads/{filename}"  # use your LAN IP
         else:
             media_url = None
 
@@ -78,11 +81,11 @@ def send_message():
         )
 
         print("✅ WhatsApp message sent successfully!")
-        return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success", "message": "WhatsApp message sent successfully!"}), 200
 
     except Exception as e:
         print("❌ Twilio Error:", e)
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "message": f"Error: {str(e)}"}), 500
 
 
 @app.route('/static/uploads/<path:filename>')
